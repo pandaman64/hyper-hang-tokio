@@ -24,6 +24,6 @@ fn main() {
                     .await
             })
             .unwrap();
-        let _handle = runtime.spawn(res.into_body().try_for_each(|_| futures::future::ok(())));
+        runtime.spawn(res.into_body().into_future());
     }
 }
