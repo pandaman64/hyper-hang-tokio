@@ -1,17 +1,14 @@
-use futures::prelude::*;
+use futures::stream::StreamExt;
 fn main() {
-    // env_logger::Builder::from_default_env()
-    //     .target(env_logger::fmt::Target::Stdout)
-    //     .init();
     tracing_subscriber::fmt::init();
 
-    let mut runtime = tokio::runtime::Builder::new()
-        .threaded_scheduler()
+    let runtime = tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()
         .unwrap();
-    let client: hyper::Client<hyperlocal::UnixConnector> =
-        hyper::Client::builder().build(hyperlocal::UnixConnector);
+    let client: hyper::Client<hyperlocal::UnixConnector> = hyper::Client::builder()
+        // .pool_max_idle_per_host(0) // workaround
+        .build(hyperlocal::UnixConnector);
     for i in 0.. {
         println!("{}", i);
         let res = runtime
